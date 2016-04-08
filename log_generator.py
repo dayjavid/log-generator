@@ -34,7 +34,11 @@ def main(argv):
         sys.exit(2)
 
     try:
-        opts, args = getopt.getopt(argv,"h",["help","logFile=","minSleepMs=","maxSleepMs=","iterations=","dataFile=","minLines=","maxLines="])
+        opts, args = getopt.getopt(argv,"h",["help","logFile=","minSleepMs=","maxSleepMs=","iterations=","dataFile=","minLines=","maxLines=","logPattern="])
+    except getopt.GetoptError, e:
+        print e
+        print usageInfo
+        sys.exit(2)
     except:
         print usageInfo
         sys.exit(2)
@@ -128,7 +132,19 @@ def main(argv):
         if (toLog == ''):
             continue
 
-        logger.debug(toLog[:-1])
+        #Randomize loglevel
+        randVal = random.random()
+        
+        if 1-randVal <= .001 or randVal <= .001:
+            logger.critical(toLog[:-1])
+        elif 1-randVal <= .03 or randVal <= .03:
+            logger.error(toLog[:-1])
+        elif 1-randVal <= .1 or randVal <= .1:
+            logger.warning(toLog[:-1])
+        elif 1-randVal <= .45 or randVal <= .45:
+            logger.info(toLog[:-1])
+        else:
+            logger.debug(toLog[:-1])
 
         if (iterations > 0):
             iterations = iterations - 1
